@@ -50,6 +50,8 @@ public:
 		length++;
 	}
 
+
+	//Removing the last item from a Linked List is O(n). Because you have to start at the beginning of the Linked List an iterate through to the end
 	void deleteLast()
 	{
 		if (length <= 0) {
@@ -89,6 +91,8 @@ public:
 		length++;
 	}
 
+
+	//Removing the first item from a Linked List is O(1). This is a place where Linked Lists are better than Vectors. Vectors are O(n) when removing the first item because of the reindexing that is required.
 	void deleteFirst()
 	{
 		if (length == 0)
@@ -106,10 +110,69 @@ public:
 		delete temp;
 		length--;
 	}
-	bool insert(int index, int value) {
-		//create new Node
 
+	bool insert(int index, int value) {
+
+		if (index<0 || index>length) return false;
+		//create new Node
+		
+		if (index == 0)
+		{
+			prepend(value);
+			return true;
+		}
+		else if (index == length)
+		{
+			append(value);
+			return true;
+		}
+		Node* newNode = new Node(index);
+		Node* temp = get(index - 1);
+		temp->next = newNode;
+		newNode->next = temp->next;
+		length++;
+		return true;
 		//insert Node
+	}
+
+	void deleteNode(int index)
+	{
+		if (index < 0 || index >= length)
+		{
+			return;
+		}
+		else if (index == 0)
+		{
+			deleteFirst();
+			return;
+		}
+		else if (index == length - 1)
+		{
+			deleteLast();
+			return;
+		}
+		Node* temp = get(index);
+		Node* pre = get(index-1);
+		pre->next = temp->next;
+		delete temp;
+		length--;
+	}
+
+	void reverse()
+	{
+		Node* temp = head;
+		head = tail;
+		tail = temp;
+
+		Node* after = temp->next;
+		Node* before = nullptr;
+		for (int i = 0; i < length; i++)
+		{
+			after = temp->next;
+			temp->next = before;
+			before = temp;
+			temp = after;
+		}
 	}
 
 	void printList()
@@ -120,6 +183,35 @@ public:
 			cout << temp->value << endl;
 			temp = temp->next;
 		}
+	}
+
+
+	//Finding an item by index in a Linked List is O(n). You have to iterate through the Linked List until you get to the index you are looking for.
+	Node* get(int index) {
+		if (index < 0 || index >= length)
+		{
+			return nullptr;
+		}
+		else
+		{
+			Node* temp = head;
+			for (int i = 0; i < length; i++)
+			{
+				temp = temp->next;
+			}
+			return temp;
+		}
+	}
+
+	bool set(int index, int value)
+	{
+		Node* temp = get(index);
+		if (temp)
+		{
+			temp->value = value;
+			return true;
+		}
+		return false;
 	}
 
 	void getHead() {
